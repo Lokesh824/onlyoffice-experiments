@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ONLYOFFICE Tabs</title>
+    <link rel="stylesheet" href="{% static 'css/tabs.css' %}">
+    <!-- Ensure you include styles for tabs and the editor container -->
+</head>
+<body>
+    <div class="tabs">
+        <button class="tablinks" onclick="openEditor(event, 'Editor1')">Editor 1</button>
+        <button class="tablinks" onclick="openEditor(event, 'Editor2')">Editor 2</button>
+        <button class="tablinks" onclick="openEditor(event, 'Editor3')">Editor 3</button>
+        <button class="tablinks" onclick="openEditor(event, 'Editor4')">Editor 4</button>
+    </div>
+
+    <!-- ONLYOFFICE Editors will be loaded in these divs -->
+    <div id="Editor1" class="tabcontent">
+        <!-- The ONLYOFFICE Editor will be initialized here -->
+    </div>
+    <div id="Editor2" class="tabcontent">
+        <!-- Initialize another ONLYOFFICE Editor instance if needed -->
+    </div>
+    <div id="Editor3" class="tabcontent">
+        <!-- Initialize another ONLYOFFICE Editor instance if needed -->
+    </div>
+    <div id="Editor4" class="tabcontent">
+        <!-- Initialize another ONLYOFFICE Editor instance if needed -->
+    </div>
+
+    <script src="{% static 'js/onlyoffice.js' %}"></script>
+    <script>
+        function openEditor(evt, editorName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(editorName).style.display = "block";
+            evt.currentTarget.className += " active";
+
+            // Initialize ONLYOFFICE editor for the selected tab here
+            // You might need to adjust how you're initializing the ONLYOFFICE editor based on your requirements
+            // Example: initOnlyOfficeEditor(editorName);
+        }
+    </script>
+</body>
+</html>
