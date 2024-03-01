@@ -26,6 +26,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 import requests
 from src.common import http
+from docx import Document
 from src.configuration import ConfigurationManager
 from src.response import ErrorResponse
 from src.utils import docManager, fileUtils, serviceConverter, users, jwtManager, historyManager, trackManager
@@ -92,6 +93,44 @@ def convert(request):
         response.setdefault('error', e.args[0])
 
     return HttpResponse(json.dumps(response), content_type='application/json')
+
+
+def clear_document(document):
+    """
+    Remove all elements in a document
+    """
+    for element in document.element.body:
+        document.element.body.remove(element)
+
+
+def generateTemplate(request):
+     # get file from the storage directory
+    script = """
+    var oDocument = Api.GetDocument();
+    var oParagraph = Api.CreateParagraph();
+    oParagraph.AddText("This is the text I want to insert.");
+    oDocument.InsertContent([oParagraph]);
+    """
+    try:
+        fileName = fileUtils.getFileName(request.GET['fileName'])  # get the file name
+        userAddress = request.GET.get('userAddress')
+        file_path = docManager.getStoragePath(fileName, userAddress)  # get file from the storage directory
+        # Open the file in write mode, which will clear existing content and write the new text
+        # with open(file_path, 'w') as file:
+        #     file.write("werweopdspofj")
+        document = Document("/Users/naveen/code/saama/Python Example/storage/127.0.0.1/endsem_ML_regular_AK.docx")
+        clear_document(document)
+        paragraph = document.add_paragraph('Your text to insert')
+        document.save(file_path)
+
+        # Return a success response
+        return HttpResponse(json.dumps({'success': True, 'message': 'File cleared and new text written successfully'}),
+                            content_type='application/json')
+    except Exception as e:
+        # Return an error response if something goes wrong
+        return HttpResponse(json.dumps({'success': False, 'message': str(e)}), content_type='application/json')
+
+
 
 # create a new file
 def createNew(request):
@@ -513,92 +552,106 @@ def edit_data(request):
 
     hist = historyManager.getHistoryObject(storagePath, filename, docKey, fileUri, isEnableDirectUrl, request)  # get the document history
 
+    # context = {  # the data that will be passed to the template
+    #     'cfg': json.dumps({
+    #                 "type": "desktop",
+    #                 "documentType": "word",
+    #                 "document": {
+    #                   "title": "endsem_ML_regular_AK.docx",
+    #                   "url": "http://host.docker.internal:8000/download?fileName=endsem_ML_regular_AK.docx&userAddress=127.0.0.1",
+    #                   "directUrl": "",
+    #                   "fileType": "docx",
+    #                   "key": "-8095245843742411912",
+    #                   "info": {
+    #                     "owner": "John Smith",
+    #                     "uploaded": "2024-02-22 18:24:38",
+    #                     "favorite": None
+    #                   },
+    #                   "permissions": {
+    #                     "comment": True,
+    #                     "copy": True,
+    #                     "download": True,
+    #                     "edit": True,
+    #                     "print": True,
+    #                     "fillForms": True,
+    #                     "modifyFilter": True,
+    #                     "modifyContentControl": True,
+    #                     "review": True,
+    #                     "chat": True,
+    #                     "reviewGroups": None,
+    #                     "commentGroups": {},
+    #                     "userInfoGroups": None,
+    #                     "protect": True
+    #                   },
+    #                   "referenceData": {
+    #                     "instanceId": "http://localhost:8000",
+    #                     "fileKey": "{\"fileName\": \"endsem_ML_regular_AK.docx\", \"userAddress\": \"127.0.0.1\"}"
+    #                   }
+    #                 },
+    #                 "editorConfig": {
+    #                   "actionLink": None,
+    #                   "mode": "edit",
+    #                   "lang": "en",
+    #                   "callbackUrl": "http://host.docker.internal:8000/track?filename=endsem_ML_regular_AK.docx&userAddress=127.0.0.1",
+    #                   "coEditing": None,
+    #                   "createUrl": "http://localhost:8000/create?fileType=desktop",
+    #                   "templates": [
+    #                     {
+    #                       "image": "",
+    #                       "title": "Blank",
+    #                       "url": "http://localhost:8000/create?fileType=desktop"
+    #                     },
+    #                     {
+    #                       "image": "http://host.docker.internal:8000/static/images/file_docx.svg",
+    #                       "title": "With sample content",
+    #                       "url": "http://localhost:8000/create?fileType=desktop&sample=true"
+    #                     }
+    #                   ],
+    #                   "user": {
+    #                     "id": "uid-1",
+    #                     "name": "John Smith",
+    #                     "group": ""
+    #                   },
+    #                   "embedded": {
+    #                     "saveUrl": "http://localhost:8000/download?fileName=endsem_ML_regular_AK.docx",
+    #                     "embedUrl": "http://localhost:8000/download?fileName=endsem_ML_regular_AK.docx",
+    #                     "shareUrl": "http://localhost:8000/download?fileName=endsem_ML_regular_AK.docx",
+    #                     "toolbarDocked": "top"
+    #                   },
+    #                   "customization": {
+    #                     "about": True,
+    #                     "comments": True,
+    #                     "feedback": True,
+    #                     "forcesave": False,
+    #                     "submitForm": False,
+    #                     "goback": {
+    #                       "url": "http://localhost:8000"
+    #                     }
+    #                   }
+    #                 }
+    #               }),  # the document config in json format
+    #     'history': json.dumps(hist['history']) if 'history' in hist else None,  # the information about the current version
+    #     'historyData': json.dumps(hist['historyData']) if 'historyData' in hist else None,  # the information about the previous document versions if they exist
+    #     'fileType': fileType,  # the file type of the document (text, spreadsheet or presentation)
+    #     'apiUrl': config_manager.document_server_api_url().geturl(),  # the absolute URL to the api
+    #     'dataInsertImage': json.dumps(dataInsertImage)[1 : len(json.dumps(dataInsertImage)) - 1],  # the image which will be inserted into the document
+    #     'dataCompareFile': dataCompareFile,  # document which will be compared with the current document
+    #     'dataMailMergeRecipients': json.dumps(dataMailMergeRecipients),  # recipient data for mail merging
+    #     'usersForMentions': json.dumps(usersForMentions) if user.id !='uid-0' else None
+    # }
     context = {  # the data that will be passed to the template
-        'cfg': json.dumps({
-                    "type": "desktop",
-                    "documentType": "word",
-                    "document": {
-                      "title": "endsem_ML_regular_AK.docx",
-                      "url": "http://host.docker.internal:8000/download?fileName=endsem_ML_regular_AK.docx&userAddress=127.0.0.1",
-                      "directUrl": "",
-                      "fileType": "docx",
-                      "key": "-8095245843742411912",
-                      "info": {
-                        "owner": "John Smith",
-                        "uploaded": "2024-02-22 18:24:38",
-                        "favorite": None
-                      },
-                      "permissions": {
-                        "comment": True,
-                        "copy": True,
-                        "download": True,
-                        "edit": True,
-                        "print": True,
-                        "fillForms": True,
-                        "modifyFilter": True,
-                        "modifyContentControl": True,
-                        "review": True,
-                        "chat": True,
-                        "reviewGroups": None,
-                        "commentGroups": {},
-                        "userInfoGroups": None,
-                        "protect": True
-                      },
-                      "referenceData": {
-                        "instanceId": "http://localhost:8000",
-                        "fileKey": "{\"fileName\": \"endsem_ML_regular_AK.docx\", \"userAddress\": \"127.0.0.1\"}"
-                      }
-                    },
-                    "editorConfig": {
-                      "actionLink": None,
-                      "mode": "edit",
-                      "lang": "en",
-                      "callbackUrl": "http://host.docker.internal:8000/track?filename=endsem_ML_regular_AK.docx&userAddress=127.0.0.1",
-                      "coEditing": None,
-                      "createUrl": "http://localhost:8000/create?fileType=desktop",
-                      "templates": [
-                        {
-                          "image": "",
-                          "title": "Blank",
-                          "url": "http://localhost:8000/create?fileType=desktop"
-                        },
-                        {
-                          "image": "http://host.docker.internal:8000/static/images/file_docx.svg",
-                          "title": "With sample content",
-                          "url": "http://localhost:8000/create?fileType=desktop&sample=true"
-                        }
-                      ],
-                      "user": {
-                        "id": "uid-1",
-                        "name": "John Smith",
-                        "group": ""
-                      },
-                      "embedded": {
-                        "saveUrl": "http://localhost:8000/download?fileName=endsem_ML_regular_AK.docx",
-                        "embedUrl": "http://localhost:8000/download?fileName=endsem_ML_regular_AK.docx",
-                        "shareUrl": "http://localhost:8000/download?fileName=endsem_ML_regular_AK.docx",
-                        "toolbarDocked": "top"
-                      },
-                      "customization": {
-                        "about": True,
-                        "comments": True,
-                        "feedback": True,
-                        "forcesave": False,
-                        "submitForm": False,
-                        "goback": {
-                          "url": "http://localhost:8000"
-                        }
-                      }
-                    }
-                  }),  # the document config in json format
-        'history': json.dumps(hist['history']) if 'history' in hist else None,  # the information about the current version
-        'historyData': json.dumps(hist['historyData']) if 'historyData' in hist else None,  # the information about the previous document versions if they exist
+        'cfg': json.dumps(edConfig),  # the document config in json format
+        'history': json.dumps(hist['history']) if 'history' in hist else None,
+        # the information about the current version
+        'historyData': json.dumps(hist['historyData']) if 'historyData' in hist else None,
+        # the information about the previous document versions if they exist
         'fileType': fileType,  # the file type of the document (text, spreadsheet or presentation)
         'apiUrl': config_manager.document_server_api_url().geturl(),  # the absolute URL to the api
-        'dataInsertImage': json.dumps(dataInsertImage)[1 : len(json.dumps(dataInsertImage)) - 1],  # the image which will be inserted into the document
+        'dataInsertImage': json.dumps(dataInsertImage)[1: len(json.dumps(dataInsertImage)) - 1],
+        # the image which will be inserted into the document
         'dataCompareFile': dataCompareFile,  # document which will be compared with the current document
         'dataMailMergeRecipients': json.dumps(dataMailMergeRecipients),  # recipient data for mail merging
-        'usersForMentions': json.dumps(usersForMentions) if user.id !='uid-0' else None
+        'usersForMentions': json.dumps(usersForMentions) if user.id != 'uid-0' else None
     }
     return HttpResponse(json.dumps(context), content_type='application/json',
                         status=200)
