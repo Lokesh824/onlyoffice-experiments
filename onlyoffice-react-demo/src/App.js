@@ -41,7 +41,7 @@ export default function App() {
                 // Replace 'your_backend_endpoint' with the actual endpoint from which you want to fetch the config
                 const response = await axios.get('http://localhost:8000/edit-data?filename=endsem_ML_regular_AK.docx&directUrl=false');
                 const parsedConfig = JSON.parse(response.data['cfg']);
-
+                console.log(parsedConfig)
                 setConfig(parsedConfig);
             } catch (error) {
                 console.error('Failed to fetch config from backend:', error);

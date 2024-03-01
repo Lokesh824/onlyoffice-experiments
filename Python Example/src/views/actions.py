@@ -118,7 +118,7 @@ def generateTemplate(request):
         # Open the file in write mode, which will clear existing content and write the new text
         # with open(file_path, 'w') as file:
         #     file.write("werweopdspofj")
-        document = Document("/Users/naveen/code/saama/Python Example/storage/127.0.0.1/endsem_ML_regular_AK.docx")
+        document = Document(file_path)
         clear_document(document)
         paragraph = document.add_paragraph('Your text to insert')
         document.save(file_path)
