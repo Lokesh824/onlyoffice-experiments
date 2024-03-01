@@ -135,18 +135,20 @@ def generateTemplate(request):
 # create a new file
 def createNew(request):
     response = {}
-
     try:
-        fileType = request.GET['fileType']
+        fileType = request.GET.get('fileType','docx')
         sample = request.GET.get('sample', False)
 
         filename = docManager.createSample(fileType, sample, request)  # create a new sample file of the necessary type
 
-        return HttpResponseRedirect(f'edit?filename={filename}')  # return http response with redirection url
+        # return HttpResponseRedirect(f'edit?filename={filename}')  # return http response with redirection url
+         # Return a success response
+        return HttpResponse(json.dumps({'success': True, 'message': 'File cleared and new text written successfully', "redirectURL":f'edit?filename={filename}'}),
+                            content_type='application/json')
 
     except Exception as e:
         response.setdefault('error', e.args[0])
-
+    
     return HttpResponse(json.dumps(response), content_type='application/json')
 
 # save file as...

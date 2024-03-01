@@ -59,3 +59,9 @@
   background-color: #fff; /* Optional: if you want a specific background */
   overflow: auto; /* For scrolling if content overflows */
 }
+/* Example CSS to move the toolbar to the bottom */
+.onlyoffice-container .toolbar-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
