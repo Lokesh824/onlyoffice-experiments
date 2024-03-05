@@ -29,7 +29,7 @@ from src.common import http
 from docx import Document
 from src.configuration import ConfigurationManager
 from src.response import ErrorResponse
-from src.utils import docManager, fileUtils, serviceConverter, users, jwtManager, historyManager, trackManager
+from src.utils import docManager, fileUtils, serviceConverter, users, jwtManager, historyManager, trackManager, builderManager
 
 config_manager = ConfigurationManager()
 
@@ -118,7 +118,7 @@ def generateTemplate(request):
         # Open the file in write mode, which will clear existing content and write the new text
         # with open(file_path, 'w') as file:
         #     file.write("werweopdspofj")
-        document = Document("/Users/naveen/code/saama/Python Example/storage/127.0.0.1/endsem_ML_regular_AK.docx")
+        document = Document(file_path)
         clear_document(document)
         paragraph = document.add_paragraph('Your text to insert')
         document.save(file_path)
@@ -150,6 +150,27 @@ def createNew(request):
         response.setdefault('error', e.args[0])
     
     return HttpResponse(json.dumps(response), content_type='application/json')
+
+
+def getDocBuilderFile(request):
+    filename = request.GET['fileName']
+    filepath = docManager.getBuilderPath(filename, request)
+    return docManager.download(f"{filepath}")
+
+
+def createWithContent(request):
+    response = {}
+    try:
+
+        # body = json.loads(request.body)
+        # commands = body["commands"]
+
+        response = builderManager.builderRequest("commands", request)
+    except Exception as e:
+        response.setdefault('error', e.args[0])
+
+    return HttpResponse(json.dumps(response.json()), content_type='application/json')
+
 
 # save file as...
 def saveAs(request):
