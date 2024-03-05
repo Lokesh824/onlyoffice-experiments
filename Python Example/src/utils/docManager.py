@@ -82,10 +82,10 @@ def getCorrectName(filename, req):
     ext = fileUtils.getFileExt(filename)
     name = f'{basename}{ext}'
 
-    i = 1
-    while os.path.exists(getStoragePath(name, req)): # if file with such a name already exists
-        name = f'{basename} ({i}){ext}'  # add an index to its name
-        i += 1
+    # i = 1
+    # while os.path.exists(getStoragePath(name, req)): # if file with such a name already exists
+    #     name = f'{basename} ({i}){ext}'  # add an index to its name
+    #     i += 1
 
     return name
 
@@ -95,6 +95,8 @@ def getServerUrl (forDocumentServer, req):
     if (forDocumentServer and example_url is not None):
         return example_url.geturl()
     else:
+        # TODO this was changed sot that it points to the right location, probably need a better way of doing this
+        # than looking at the example_url
         return req.headers.get("x-forwarded-proto") or req.scheme + "://" + req.get_host()
 
 # get file url
@@ -121,14 +123,18 @@ def getDownloadUrl(filename, req, isServerUrl = True):
     return f'{host}/download?fileName={filename}{curAdr}'
 
 # get root folder for the current file
-def getRootFolder(req):
+def getRootFolder(req, builder = False):
     if isinstance(req, str):
         curAdr = req
     else:
         curAdr = req.META['REMOTE_ADDR']
 
-    storage_directory = config_manager.storage_path()
-    directory = storage_directory.joinpath(curAdr)
+    if builder:
+        child_dir = config_manager.builder_path()
+    else:
+        child_dir = config_manager.storage_path()
+
+    directory = child_dir.joinpath(curAdr)
 
     if not os.path.exists(directory): # if such a directory does not exist, make it
         os.makedirs(directory)
@@ -151,9 +157,29 @@ def getHistoryPath(filename, file, version, req):
 
     return filePath
 
+def getHistoryDirPath(filename, req):
+    if isinstance(req, str):
+        curAdr = req
+    else:
+        curAdr = req.META['REMOTE_ADDR']
+
+    storage_directory = config_manager.storage_path()
+    directory = storage_directory.joinpath(curAdr)
+    if not os.path.exists(directory): # the directory with host address doesn't exist
+        folderPath = os.path.join(getRootFolder(req), f'{filename}-hist')
+    else:
+        folderPath = os.path.join(directory, f'{filename}-hist')
+
+    return folderPath
+
 # get the file path
 def getStoragePath(filename, req):
     directory = getRootFolder(req)
+
+    return os.path.join(directory, fileUtils.getFileName(filename))
+
+def getBuilderPath(filename, req):
+    directory = getRootFolder(req, builder = True)
 
     return os.path.join(directory, fileUtils.getFileName(filename))
 
@@ -304,4 +330,5 @@ def download(filePath):
     response['Content-Disposition'] = "attachment;filename*=UTF-8\'\'" + urllib.parse.quote_plus(os.path.basename(filePath))
     response['Content-Type'] = magic.from_file(filePath, mime=True)
     response['Access-Control-Allow-Origin'] = "*"
+    print(response)
     return response

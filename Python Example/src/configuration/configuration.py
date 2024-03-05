@@ -49,7 +49,17 @@ class ConfigurationManager:
             environ.get('DOCUMENT_SERVER_API_PATH') or
             '/web-apps/apps/api/documents/api.js'
         )
-        url = urljoin('http://0.0.0.0:80', path)
+        url = urljoin(base_url, path)
+        return urlparse(url)
+
+    def document_builder_api_url(self) -> ParseResult:
+        server_url = self.document_server_private_url()
+        base_url = server_url.geturl()
+        path = (
+            environ.get('DOCUMENT_BUILDER_API_PATH') or
+            '/docbuilder'
+        )
+        url = urljoin(base_url, path)
         return urlparse(url)
 
     def document_server_preloader_url(self) -> ParseResult:
@@ -59,7 +69,7 @@ class ConfigurationManager:
             environ.get('DOCUMENT_SERVER_PRELOADER_PATH') or
             '/web-apps/apps/api/documents/cache-scripts.html'
         )
-        url = urljoin('http://0.0.0.0:80', path)
+        url = urljoin(base_url, path)
         return urlparse(url)
 
     def document_server_command_url(self) -> ParseResult:
@@ -103,6 +113,15 @@ class ConfigurationManager:
             return storage_directory
         file = Path(__file__)
         directory = file.parent.joinpath('../..', storage_directory)
+        return directory.resolve()
+
+    def builder_path(self) -> Path:
+        builder_path = environ.get('BUILDER_PATH') or 'builder'
+        builder_directory = Path(builder_path)
+        if builder_directory.is_absolute():
+            return builder_directory
+        file = Path(__file__)
+        directory = file.parent.joinpath('../..', builder_directory)
         return directory.resolve()
 
     def maximum_file_size(self) -> int:
