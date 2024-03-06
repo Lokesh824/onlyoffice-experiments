@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Menu } from "antd";
+
+import { Menu, Switch } from "antd";
 import {
   MenuOutlined,
   LeftCircleOutlined,
   RightCircleOutlined,
+  PieChartOutlined,
 } from "@ant-design/icons";
 function getItem(label, key, icon, children, type) {
   return {
@@ -15,44 +17,58 @@ function getItem(label, key, icon, children, type) {
   };
 }
 const items = [
-  getItem("Navigation One", "sub1", null, [
-    getItem(
-      "Item 1",
-      "g1",
-      null,
-      [getItem("Option 1", "1"), getItem("Option 2", "2")],
-      "group"
-    ),
-    getItem(
-      "Item 2",
-      "g2",
-      null,
-      [getItem("Option 3", "3"), getItem("Option 4", "4")],
-      "group"
-    ),
-  ]),
-  getItem("Navigation Two", "sub2", null, [
-    getItem("Option 5", "5"),
-    getItem("Option 6", "6"),
-    getItem("Submenu", "sub3", null, [
-      getItem("Option 7", "7"),
-      getItem("Option 8", "8"),
-    ]),
-  ]),
-  {
-    type: "divider",
-  },
-  getItem("Navigation Three", "sub4", null, [
-    getItem("Option 9", "9"),
-    getItem("Option 10", "10"),
-    getItem("Option 11", "11"),
-    getItem("Option 12", "12"),
-  ]),
+  // getItem("Navigation One", "sub1", null, [
+  //   getItem(
+  //     "Item 1",
+  //     "g1",
+  //     null,
+  //     [getItem("Option 1", "1"), getItem("Option 2", "2")],
+  //     "group"
+  //   ),
+  //   getItem(
+  //     "Item 2",
+  //     "g2",
+  //     null,
+  //     [getItem("Option 3", "3"), getItem("Option 4", "4")],
+  //     "group"
+  //   ),
+  // ]),
+  // getItem("Navigation Two", "sub2", null, [
+  //   getItem("Option 5", "5"),
+  //   getItem("Option 6", "6"),
+  //   getItem("Submenu", "sub3", null, [
+  //     getItem("Option 7", "7"),
+  //     getItem("Option 8", "8"),
+  //   ]),
+  // ]),
+  // {
+  //   type: "divider",
+  // },
+
   getItem(
-    "Group",
+    "",
     "grp",
     null,
-    [getItem("Option 13", "13"), getItem("Option 14", "14")],
+    [
+      getItem("Study Objectives", "Study_Objectives"),
+      getItem("Study Design", "Study_Design"),
+      getItem("Background and Rationale", "Background_and_Rationale"),
+      getItem("Inclusion/Exclusion Criteria", "Inclusion_Exclusion_Criteria"),
+      getItem(
+        "Sample Size and Power Calculation",
+        "Sample_Size_and_Power_Calculation"
+      ),
+      getItem(
+        "Study Endpoints and Outcome Measures",
+        "Study_Endpoints_and_Outcome_Measures"
+      ),
+      getItem("Statistical Analysis Plan", "Statistical_Analysis_Plan"),
+      getItem(
+        "Data Collection and Management",
+        "Data_Collection_and_Management"
+      ),
+      getItem("Ethics and Safety", "Ethics_and_Safety"),
+    ],
     "group"
   ),
 ];
@@ -60,6 +76,7 @@ function SectionsList(props) {
   const [showExpanded, setShowExpanded] = useState(true);
   const onClick = (e) => {
     console.log("click ", e);
+    props.onmenuclick(e);
   };
   return (
     <>
@@ -76,7 +93,7 @@ function SectionsList(props) {
           >
             <span>
               {" "}
-              <MenuOutlined /> &nbsp;Sections
+              <PieChartOutlined /> &nbsp;Document Sections
             </span>
             <span
               onClick={() => {
@@ -87,6 +104,20 @@ function SectionsList(props) {
             >
               <LeftCircleOutlined />
             </span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              // padding: "20px",
+              fontSize: "large",
+              fontWeight: 400,
+            }}
+          >
+          <span>
+            {" "}
+            Metadata &nbsp; <Switch defaultChecked onChange={props.showMeta}/>
+          </span>
           </div>
           <Menu
             onClick={onClick}
@@ -105,12 +136,12 @@ function SectionsList(props) {
           style={{
             display: "flex",
             justifyContent: "center",
-            fontSize: "xxx-large",
+            fontSize: "x-large",
             color: "#446995",
-            marginTop:'20px'
+            marginTop: "20px",
           }}
         >
-          <RightCircleOutlined />
+          <MenuOutlined />
         </div>
       )}
     </>

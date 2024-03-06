@@ -1,0 +1,324 @@
+$light: #ebedef;
+
+a{
+    text-decoration: none;
+}
+
+.full-h{
+    height: calc(100vh - 90px);
+}
+
+.full-min-h{
+    min-height: calc(100vh - 90px);
+}
+
+.bg-light-clr{
+    background-color: $light;
+}
+
+.scale:hover{
+    scale: 1.1;
+}
+
+.flex-1{
+    flex: 1;
+}
+
+#text-area{
+    min-height: 40px !important;
+    max-height: 100px !important;
+    height: 40px;
+    line-height: 20px;
+}
+
+// ---------------------Loader---------------------
+.loader {
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.loader.light{
+    background-color: #ebedef;
+}
+
+.loader.rounded{
+    border-radius: 3px;
+}
+
+// ---------------------Read More---------------------
+.read-more{
+    text-decoration: underline;
+    color: #245ab6;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+// ---------------------Navbar---------------------
+.navbar-brand{
+    display: flex;
+    align-items: center;
+    font-size: clamp(0.6rem, 4vw, 1.2rem);
+}
+
+.navbar-brand span{
+    white-space: normal;
+
+}
+
+.saama-logo{
+    border-right: 1px solid white;
+}
+
+// ---------------------Home Page---------------------
+
+.home{
+    height: calc(100vh - 70px);
+    text-align: center;
+}
+
+.home .home-btn{
+    width: clamp(130px, 40vw, 200px);
+    white-space: normal;
+}
+
+.navigation-section{
+    width: clamp(700px, 60vw, 200px);
+    height: 50vh;
+}
+
+// ---------------------Question Home---------------------
+
+.upload-cnt{
+    width: 80%;
+    margin: 12px auto !important;
+}
+
+.upload-btn{
+    cursor: pointer;
+}
+
+.instruction{
+    margin-bottom: 0 !important;
+}
+
+.ic-fill-success{
+    color: rgb(16, 188, 16);
+}
+
+.ic-fill-danger{
+    color: red;
+}
+
+.sub-heading{
+    background-color: #B3D4FF60 !important;
+    padding: 4px 8px;
+}
+
+// ---------------------Chatbox---------------------
+.chatbox-cnt{
+    display: grid;
+    grid-template-columns: 65% 35%;
+    gap: 1rem;
+}
+
+.cnt-1{
+    display: grid;
+    grid-template-rows: 1fr 52px;
+    overflow: auto;
+    position: relative;
+    padding-top: 2rem !important;
+}
+
+.ic-send-cnt{
+    height: 40px;
+    width: 40px !important;
+    padding: .2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FAFBFC;
+    border: 2px solid #C1C7D0;
+    border-left: 0;
+    cursor: pointer;
+}
+
+.ic-send-cnt button{
+    min-width: unset !important;
+}
+
+.ic-send-cnt:hover{
+    background-color: #FFF;
+}
+
+.response-cnt{
+    overflow: auto;
+    padding-bottom: 1rem;
+}
+
+.response-cnt p{
+    font-size: 1rem;
+}
+
+.back-ic{
+    position: absolute;
+    top: 5px;
+    left: 20px;
+    cursor: pointer;
+}
+
+.back-ic-chat{
+    position: absolute;
+    top: 5px;
+    left: 20px;
+    cursor: pointer;
+}
+
+.tooltip-inner{
+    padding: .1rem .5rem !important;
+}
+
+.example-cnt{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.example-cnt .badge{
+    width: 60%;
+    white-space: pre-wrap;
+    cursor: pointer;
+    margin-top: .3rem;
+    padding: 8px 16px;
+    border: .7px solid #dadbe096;
+}
+
+.example-cnt .badge:hover{
+    background-color: #e8f1ff !important;
+}
+
+.cnt-2{
+    display: grid;
+    grid-template-rows: 1fr auto 200px;
+    overflow: auto;
+    gap: .2rem;
+    position: relative;
+}
+
+.selected-heading-cnt{
+    overflow: auto;
+}
+
+.selected-heading-cnt .aging-actions, .selected-heading-cnt .aging-actions ul{
+    margin-bottom: 0 !important;
+}
+
+.active.select-heading{
+    cursor: unset;
+}
+
+.modal{
+    --cui-modal-width: 98vw !important;
+}
+
+.response-ic-cnt{
+    height: 40px;
+    min-width: 40px;
+    padding: .2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FAFBFC;
+    border-right: 2px solid #C1C7D0;
+}
+
+.suggestion-cnt{
+    overflow: auto;
+}
+
+.suggested-qa-cnt{
+    width: 100%;
+}
+
+
+.suggested-question{
+    white-space: normal;
+    text-align: left;
+    cursor: pointer;
+}
+
+.suggested-qa-cnt .inline-message-container{
+    padding: 8px 16px !important;
+    border: .7px solid #dadbe096;
+}
+
+.modal-header h5{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.modal-header h5 svg{
+    cursor: pointer;
+}
+
+.modal-body{
+    padding: 1rem !important;
+    min-height: 100px;
+}
+
+table thead{
+    background-color: #e8f1ff !important;
+}
+
+.full-screen{
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 0 !important;
+}
+
+.full-screen button{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2000;
+}
+
+// ------------------Full Doc---------------------
+
+.ml-1{
+    margin-left: 2rem !important;
+}
+
+@media (max-width: 900px) { 
+    .example-cnt .badge{
+        width: 90%;
+    }
+ }
+
+@media (max-width: 670px) { 
+    .full-h{
+        height: unset;
+    }
+    .chatbox-cnt{
+        grid-template-columns: auto;
+        grid-template-rows: calc(100vh - 100px) 700px;
+        margin-bottom: 1rem !important;
+    }
+ }

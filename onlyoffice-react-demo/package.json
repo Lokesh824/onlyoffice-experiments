@@ -3,15 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@coreui/coreui": "^4.3.2",
+    "@itispal/uikit": "^0.0.20",
     "@onlyoffice/document-editor-react": "^1.4.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.14.2",
     "axios": "^1.6.7",
+    "file-saver": "^2.0.5",
+    "html-docx-js": "^0.3.1",
+    "html-to-docx": "^1.8.0",
+    "katex": "^0.16.9",
+    "mammoth": "^1.7.0",
     "react": "^18.2.0",
+    "react-diff-viewer": "^3.1.1",
     "react-dom": "^18.2.0",
+    "react-latex-next": "^2.2.0",
+    "react-router-dom": "^6.22.2",
     "react-scripts": "^3.0.1",
+    "reactstrap": "^9.2.2",
+    "suneditor-react": "^3.6.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -38,5 +50,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "node-sass": "^9.0.0",
+    "sass": "^1.71.1"
   }
 }
